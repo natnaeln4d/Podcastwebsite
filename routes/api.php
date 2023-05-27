@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/signup',[AuthController::class,'signup']);
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/comments', [ViewerController::class, 'postComment']);
+Route::post('/contactus',[ViewerController::class,'postContactus']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getViewer', [AuthController::class,'getAllViewer']);
@@ -34,4 +35,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::delete('/deletePodcast/{id}', [PodcastController::class, 'deletePodcast']);
     Route::delete('/deleteUser/{id}', [ViewerController::class, 'deleteViewer']);
     Route::get('/allcomments',[ViewerController::class,'getAllComments']);
+    Route::get('/getContactus',[ViewerController::class,'getContactus']);
 });

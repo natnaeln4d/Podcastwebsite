@@ -86,7 +86,7 @@ class AuthController extends Controller
          return response()->json([
                      "status" => "success",
                      "token" => $token,
-                     "user" => $user->id
+                     "user" => $user
          ],200);
         }catch(\Exception $E){
           return response()->json([
