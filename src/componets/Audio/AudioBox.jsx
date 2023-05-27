@@ -4,10 +4,10 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-refresh/only-export-components */
 import React from 'react';
-import Audio1 from './../../assets/h.mp3'
+
 import axios from 'axios'
 import Alert from '../Admin/Alert';
-export default function AudioBox({ id,title, description, released }) {
+export default function AudioBox({ id,title, description, released ,audio_url}) {
   const [isFocused, setIsFocused] = React.useState(false);
   const [currentTime, setCurrentTime] = React.useState(0);
   const [duration, setDuration] = React.useState(0);
@@ -78,7 +78,7 @@ export default function AudioBox({ id,title, description, released }) {
     const seconds = Math.floor(time % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
-
+  const baseUrl = 'http://127.0.0.1:8000';
   return (
     <div>
          <div
@@ -92,7 +92,7 @@ export default function AudioBox({ id,title, description, released }) {
       <div className="flex items-start">
         <div className="w-[1rem] p-5 justify-center items-center">
         <audio 
-        src={Audio1} 
+        src={`${baseUrl}${audio_url}`}
         controls 
         className="-mx-[4.5rem] w-20 h-20 rounded-full"
         onTimeUpdate={handleTimeUpdate}></audio>

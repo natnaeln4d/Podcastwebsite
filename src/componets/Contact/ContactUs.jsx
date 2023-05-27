@@ -2,7 +2,60 @@
 /* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import Screen from './../../assets/Screen Shot 2023-05-26 at 9.03.45 PM.png'
+import axios from 'axios'
+import Alert from '../Admin/Alert';
 export default function ContactUs(){
+  const [fullName,setFullname] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] =useState('');
+
+  const send = async (data) => {
+    try {
+      const token = localStorage.getItem('token');
+      const http = axios.create({
+        baseURL: 'http://localhost:8000/api',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      const res = await http.post('/contactus', data);
+      const comment = res.data;
+ 
+      console.log(comment.status);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleSubmit = async(event) => {
+    try {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('fullName', fullName);
+    formData.append('email', email);
+    formData.append('message', message);
+   await send(formData);
+   setEmail('')
+   setFullname('')
+   setMessage('')
+    setSuccessMessage('sended successfully.');
+    setErrorMessage('');
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 4000);
+  } catch (error) {
+    console.log(error);
+    setSuccessMessage('');
+    setErrorMessage('Failed to send.');
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 4000);
+  }
+   
+  };
+
     return(
         <div>
          
@@ -21,7 +74,17 @@ export default function ContactUs(){
 
     <div class="flex flex-wrap">
       <div class="grow-0 shrink-0 basis-auto mb-12 lg:mb-0 w-full lg:w-5/12 px-3 lg:px-6">
-        <form>
+      <div className='mb-2'>
+    
+    {successMessage && (
+      
+      <Alert type="success" message={successMessage} />
+    )}
+
+   
+    {errorMessage && <Alert type="error" message={errorMessage} />}
+  </div>
+        <form onSubmit={handleSubmit}>
           <div class="form-group mb-6">
             <input type="text" class="form-control block
             w-full
@@ -36,7 +99,7 @@ export default function ContactUs(){
             transition
             ease-in-out
             m-0
-            focus:text-gray-700 focus:bg-white focus:border-purple-600 focus:outline-none" id="exampleInput7" placeholder="Name"/>
+            focus:text-gray-700 focus:bg-white focus:border-purple-600 focus:outline-none" id="exampleInput7" value={fullName} onChange={(e)=>setFullname(e.target.value)} placeholder="Full Name"/>
           </div>
           <div class="form-group mb-6">
             <input type="email" class="form-control block
@@ -52,7 +115,7 @@ export default function ContactUs(){
             transition
             ease-in-out
             m-0
-            focus:text-gray-700 focus:bg-white focus:border-purple-600 focus:outline-none" id="exampleInput8" placeholder="Email address"/>
+            focus:text-gray-700 focus:bg-white focus:border-purple-600 focus:outline-none" id="exampleInput8" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email address"/>
           </div>
           <div class="form-group mb-6">
             <textarea class="
@@ -71,7 +134,7 @@ export default function ContactUs(){
             ease-in-out
             m-0
             focus:text-gray-700 focus:bg-white focus:border-purple-600 focus:outline-none
-          " id="exampleFormControlTextarea13" rows="3" placeholder="Message"></textarea>
+          " id="exampleFormControlTextarea13" rows="3" value={message} onChange={(e)=>setMessage(e.target.value)} placeholder="Message"></textarea>
           </div>
           <div class="form-group form-check text-center mb-6">
             <input type="checkbox" class="form-check-input appearance-none h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-purple-600 checked:border-purple-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer" id="exampleCheck87" checked/>

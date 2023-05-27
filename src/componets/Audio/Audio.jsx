@@ -60,7 +60,7 @@ if (audioList.length > 0) {
 
 
   return (
-    <div className="bg-gray-300 p-8">
+    <div className="container bg-gray-300 p-8">
       <div className="mx-auto">
         <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800 mt-5 ">Podcast Audios</h3>
         <div className="flex gap-[1rem] mb-4">
@@ -83,11 +83,11 @@ if (audioList.length > 0) {
             Sort Descending
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-[1rem] p-20 mt-[-2rem]">
-          {filteredAudioList.map((audio) => (
-            <AudioBox key={audio.id} {...audio} />
-          ))}
-        </div>
+        <div className="container grid grid-cols-1 md:grid-cols-3 gap-[1rem] p-20 mt-[-2rem]">
+  {filteredAudioList.map((audio) => (
+    <AudioBox key={audio.id} {...audio} />
+  ))}
+</div>
       </div>
     </div>
   );

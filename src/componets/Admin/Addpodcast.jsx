@@ -9,6 +9,7 @@ import { Link as ScrollLink } from 'react-scroll'
 import { useState } from 'react';
 import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
+import { Link as Link} from 'react-router-dom'
 
 import Alert from './Alert';
 export default function Addpodcast() {
@@ -31,10 +32,7 @@ export default function Addpodcast() {
 
     const res = await http.post('/addpodcast', data);
     const user = res.data;
-    sendAudio('');
-    setVideo('');
-    setDescription('');
-    setTitle('');
+  
     console.log(user.status);
   } catch (error) {
     console.log(error);
@@ -53,6 +51,10 @@ const userID = parseInt(localStorage.getItem('user'), 10);
     formData.append('audio', audio);
     // formData.append('video', video);
     await sendAudio(formData);
+    setAudio('');
+    setVideo('');
+    setDescription('');
+    setTitle('');
     setSuccessMessage('Added successfully.');
     setErrorMessage('');
     setTimeout(() => {
@@ -73,18 +75,20 @@ const userID = parseInt(localStorage.getItem('user'), 10);
   return (
     <div>
      <div className=' ' >
-<nav className="bg-white border-gray-200 dark:bg-purple-900">
-   <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
-   <ScrollLink to="section1" smooth={true} duration={500} className="flex items-center">
-           <img src={img2} className="h-12  mr-3" alt="mic" />
-           <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Deep Podcast</span>
-   </ScrollLink>
-     
-       <div className="flex items-center">
-           <a href="tel:5541251234" className="mr-6 text-sm  text-gray-500 dark:text-white hover:underline">Sign up</a>
-           <a href="#" className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</a>
-       </div>
-   </div>
+     <nav className="bg-white border-gray-200 dark:bg-purple-900">
+    <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl p-4">
+    <ScrollLink to="section1" smooth={true} duration={500} className="flex items-center">
+            <img src={img2} className="h-12  mr-3" alt="mic" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Deep Podcast</span>
+    </ScrollLink>
+      
+        <div className="flex items-center">
+        <Link to={`/signup`} className="mr-6 text-sm  text-gray-500 dark:text-white hover:underline">Sign up</Link>
+            
+            <Link to={`/`} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</Link>
+
+        </div>
+    </div>
 </nav>
 <div className='h-[90px] w-full flex dark:bg-gray-700'>
            <div className='p-2 m-2 mb-2 flex-column'>

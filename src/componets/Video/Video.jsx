@@ -78,7 +78,7 @@ export default function Video() {
             : videoList;
         
           return (
-            <div className="bg-purple-300 p-8">
+            <div className="container bg-purple-300 p-8">
               <div className=" mx-auto">
           
       <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800">Podcast Videos</h3>
@@ -107,7 +107,7 @@ export default function Video() {
         
             
           </div>
-                <div className="grid grid-cols-2 gap-[1rem] p-20 mt-[-2rem]">
+                <div className="containe grid grid-cols-2 gap-[1rem] p-20 mt-[-2rem]">
                   {filteredVideoList.map((video) => (
                     <VideoBox key={video.id} {...video} />
                   ))}

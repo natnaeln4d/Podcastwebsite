@@ -16,6 +16,7 @@ import Login from './componets/Auth/Login.jsx'
 import Viewers from './componets/Admin/Viewers.jsx';
 import Comments from './componets/Admin/Comments.jsx';
 import Addvideo from './componets/Admin/Addvideo.jsx';
+import ContactMessage from './componets/Admin/ContactMessage.jsx';
 const router = createBrowserRouter([
   {
     path: "/home",
@@ -52,6 +53,10 @@ const router = createBrowserRouter([
   {
     path:"/addvideo",
     element:<Addvideo />
+  },
+  {
+    path:"/contactsmsg",
+    element:<ContactMessage />
   }
   
 ]);

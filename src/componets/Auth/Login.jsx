@@ -21,39 +21,32 @@ export default function Login() {
  }
  
  
- const sendRegister = async(data) => {
-  try{
-   const http = axios.create({
-     'baseURL': 'http://localhost:8000/api',
- 
-  });
-  
-  const res = await http.post('/login',data);
-  const user = res.data;
-  console.log(user)
- 
-  
-  if(user.status === 'success'){
-  
- 
-   localStorage.setItem('token',user.token);
-   localStorage.setItem('user',JSON.stringify(user));
- 
- if(user.role === 'admin'){
-  navigate('/allpodcast')
- }
- else{
-  navigate('/home')
- }
+ const sendRegister = async (data) => {
+  try {
+    const http = axios.create({
+      baseURL: 'http://localhost:8000/api',
+    });
 
-   
- 
+    const res = await http.post('/login', data);
+    const user = res.data;
+    console.log(user);
+
+    if (user.status === 'success') {
+      localStorage.setItem('token', user.token);
+      localStorage.setItem('user', JSON.stringify(user));
+      const loggedInUser = JSON.parse(localStorage.getItem('user'));
+
+      if (loggedInUser.role === 'admin') {
+        navigate('/allpodcast');
+      } else {
+        navigate('/home');
+      }
     }
-   }catch(error) {
-     console.log(error)
-   }
-    
-   }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
    
 const hadleSubmit = (e) => {
    
