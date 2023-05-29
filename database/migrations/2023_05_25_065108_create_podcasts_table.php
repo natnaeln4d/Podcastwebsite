@@ -19,9 +19,7 @@ return new class extends Migration
             $table->string('title');
             $table->string('description');
             $table->text('audio_url')->nullable();
-            $table->text('video_url')->nullable();
             $table->text('audio_path')->nullable();
-            $table->text('video_path')->nullable();
             $table->timestamps();
 
         });

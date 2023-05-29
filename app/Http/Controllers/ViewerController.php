@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Models\ContactUs;
 use App\Models\Podcast;
 use App\Models\User;
+use App\Models\Video;
 use Illuminate\Support\Facades\Validator;
 
 class ViewerController extends Controller
@@ -22,6 +23,7 @@ class ViewerController extends Controller
 
         $comment = new Comment();
         $comment->text = $validatedData['text'];
+        $comment->user_id=$request->user_id;
 
 
         $podcast = Podcast::findOrFail($validatedData['podcast_id']);
@@ -35,9 +37,34 @@ class ViewerController extends Controller
             'msg' => 'Comment posted successfully',
         ], 200);
     }
+    public function videoComment(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'video_id' => 'required|exists:videos,id',
+            'text' => 'required|string|max:255',
+        ]);
+
+
+        $comment = new Comment();
+        $comment->text = $validatedData['text'];
+        $comment->user_id=$request->user_id;
+
+
+        $podcast = Video::findOrFail($validatedData['video_id']);
+        $comment->video()->associate($podcast);
+
+
+        $comment->save();
+
+        return response()->json([
+            'status' => 'success',
+            'msg' => 'Comment posted successfully',
+        ], 200);
+    }
     public function getAllComments()
     {
-        $comments = Comment::all();
+        $comments = Comment::with('podcast','video','user')->get();
 
         return response()->json([
             'status' => 'success',
@@ -108,6 +135,32 @@ class ViewerController extends Controller
             return response()->json([
                 'status' => 'success',
                 'msg' => 'User deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'fail',
+                'msg' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function updateUserStatus(Request $request, $id)
+    {
+        try {
+            $comment = User::find($id);
+
+            if (!$comment) {
+                return response()->json([
+                    'status' => 'fail',
+                    'msg' => 'User not found'
+                ], 404);
+            }
+
+            $comment->status = $request->status;
+            $comment->save();
+
+            return response()->json([
+                'status' => 'success',
+                'msg' => ' status updated successfully'
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

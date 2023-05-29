@@ -24,12 +24,18 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/signup',[AuthController::class,'signup']);
 Route::post('/login',[AuthController::class,'login']);
 Route::post('/comments', [ViewerController::class, 'postComment']);
+Route::post('/commentVideo', [ViewerController::class, 'videoComment']);
 Route::post('/contactus',[ViewerController::class,'postContactus']);
-
+Route::post('/forgot-password',[AuthController::class, 'submitForgetPasswordForm']);
+Route::post('/reset-password',[AuthController::class, 'submitResetPasswordForm']);
+Route::post('/pinverify',[AuthController::class, 'pinVerify']);
+Route::patch('/subscribe/{id}',[ViewerController::class,'updateUserStatus']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getViewer', [AuthController::class,'getAllViewer']);
     Route::post('/addpodcast',[PodcastController::class,'addpodcast']);
+    Route::post('/addvideopodcast',[PodcastController::class,'postVideo']);
     Route::get('/getAll',[PodcastController::class,'getAllPodcasts']);
+    Route::get('/getAllvideo',[PodcastController::class,'getAllVideo']);
     Route::patch('/update/{id}', [PodcastController::class, 'updatePodcast']);
     Route::get('/getPodcastById/{id}', [PodcastController::class, 'getPodcastById']);
     Route::delete('/deletePodcast/{id}', [PodcastController::class, 'deletePodcast']);

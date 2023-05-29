@@ -15,12 +15,16 @@ return new class extends Migration
     {
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->string('video_name')->nullable();
-            $table->string('video_path')->nullable();
-            $table->string('video_url')->nullable();
-            $table->integer('video_height')->nullable();
-            $table->integer('video_width')->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->string('title');
+            $table->string('description');
+            $table->text('video_url')->nullable();
+            $table->text('video_path')->nullable();
+            $table->string('photo_name')->nullable();
+            $table->string('photo_path')->nullable();
+            $table->string('photo_url')->nullable();
+            $table->integer('height')->unsigned()->nullable();
+            $table->integer('width')->unsigned()->nullable();
             $table->timestamps();
         });
     }

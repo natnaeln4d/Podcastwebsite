@@ -15,6 +15,12 @@ return new class extends Migration
     {
         Schema::create('photos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('video_id');
+            $table->string('photo_name');
+            $table->string('photo_path');
+            $table->string('photo_url');
+            $table->integer('height')->unsigned()->nullable();
+            $table->integer('width')->unsigned()->nullable();
             $table->timestamps();
         });
     }
