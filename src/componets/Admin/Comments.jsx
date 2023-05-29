@@ -70,20 +70,40 @@ export default function Comments({ audioId}) {
   <div>
       <h2 className="text-2xl font-bold mb-4">All Comments</h2>
       {comments.map((comment) => (
-        <div key={comment.id} className="bg-white rounded-lg shadow-md p-4 mb-4">
-          <p className="text-lg">{comment.text}</p>
-          <p className="text-gray-500 text-sm mt-2">
-            Posted on: {comment.created_at}
-          </p>
-          <p className="text-gray-500 text-sm">
-            Podcast ID: {comment.podcast_id}
-          </p>
-        
-          <p className="text-gray-500 text-sm">
-            Viewer ID: {audioId}
-          </p>
-        </div>
-      ))}
+  <div key={comment.id} className="bg-white rounded-lg shadow-md p-4 mb-4">
+    <p className="text-lg">{comment.text}</p>
+    <p className="text-gray-500 text-sm mt-2">
+      Posted on: {comment.created_at}
+    </p>
+    {comment.podcast && (
+      <p className="text-gray-500 text-sm">
+      Podcast ID: {comment.podcast.id || ''}
+    </p>
+    )}
+    {comment.video && (
+      <p className="text-gray-500 text-sm">
+      Podcast ID: {comment.video.id || ''}
+    </p>
+    )}
+    {comment.podcast && (
+      <p className="text-gray-500 text-sm">
+        Podcast Title: {comment.podcast.title}
+      </p>
+    )}
+    {comment.video&& (
+      <p className="text-gray-500 text-sm">
+        Podcast Title: {comment.video.title}
+      </p>
+    )}
+    {comment.user&& (
+      <p className="text-gray-500 text-sm">
+        email: {comment.user.email}
+      </p>
+    )}
+  
+  </div>
+))}
+
     </div>
         
         </div>

@@ -10,92 +10,72 @@ import { useState } from 'react';
 import {useNavigate} from 'react-router-dom'
 import { Link as Link} from 'react-router-dom'
 
-// import axios from 'axios'
+import axios from 'axios'
 import Alert from './Alert';
 export default function Addvideo() {
 
 
   const navigate = useNavigate();
+   
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [video, setVideo] = useState('');
+    const [audio, setAudio] = useState(null);
+    const [video, setVideo] = useState(null);
+    const [photo, setPhoto] = useState(null);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
   
+    const sendVideo = async (data) => {
+    try {
+      const token = localStorage.getItem('token');
+      const http = axios.create({
+        baseURL: 'http://localhost:8000/api',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
   
-
-  const sendRegister = async(data) => {
+      const res = await http.post('/addvideopodcast', data);
+      const user = res.data;
+    
+      console.log(user.status);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   
-  // try {
-    
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+  const userID = parseInt(localStorage.getItem('user'), 10);
   
-  //   const token = localStorage.getItem('token')
-  //   const http = axios.create({
-  //       'baseURL': 'http://localhost:8000/api',
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`
-  //       }
-  //    });
-  //    const res = await http.post('/chairman/register',data);
-  //    const user = res.data;
-  //    console.log(user.status)
-     
-  //    if(user.status === 'sucess'){
-  
-  //     localStorage.removeItem('face-id');
-      
-  //     switch(user.role.roleable.role){
-  //        case 'admin':
-  //           navigate('/admin/dashboard');
-  //           break;
-  //        case 'candidate':
-  //          navigate('candidate/dashboard');
-  //          break;
-  //        case 'chairman':
-  //           navigate('chairman/dashboard');
-  //           break;
-  //        case 'voter':
-  //           navigate('voter/dashboard');
-  //           break;
-  //        default:
-  //           navigate('/');
-  //           break;
-           
-  //     }
-  //  }
-  //     } catch (error) {
-    
-  //   }
-  }
-    
-    
-  
-    const handleSubmit = (event) => {
-      try{
-    
-      event.preventDefault();
-     
       const formData = new FormData();
-      formData.append("title",title);
-      formData.append("description",description);
-      formData.append("video", video);
-    
-      setSuccessMessage('added successfully.');
+      formData.append('user_id', 1);
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('audio', audio);
+      formData.append('video', video);
+      formData.append('photo', photo);
+      await sendVideo(formData);
+      setAudio('');
+      setVideo('');
+      setDescription('');
+      setTitle('');
+      setSuccessMessage('Added successfully.');
       setErrorMessage('');
       setTimeout(() => {
         setSuccessMessage('');
       }, 4000);
-      } catch (error) {
-     
+    } catch (error) {
+      console.log(error);
       setSuccessMessage('');
       setErrorMessage('Failed to add.');
       setTimeout(() => {
         setErrorMessage('');
       }, 4000);
     }
-    
+  };
   
-    };
   return (
     <div>
      <div className=' ' >
@@ -190,15 +170,28 @@ export default function Addvideo() {
         <input
           className="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           id="video"
-          type='file'
-          value={video}
-          onChange={(e) => setVideo(e.target.value)}
-          placeholder="Enter Audio "
+          type="file"
+          onChange={(e) => setVideo(e.target.files[0])} 
+          placeholder="Enter video"
         />
       </div>
     
       </div>
-  
+      <div className='flex gap-4'>
+      <div className="mb-4 w-full">
+        <label className="block text-gray-700 font-bold mb-2" for="email">
+         Add Thumbnail
+        </label>
+        <input
+          className="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          id="photo"
+          type="file"
+          onChange={(e) => setPhoto(e.target.files[0])} 
+          placeholder="Enter Thumbnail for the video"
+        />
+      </div>
+    
+      </div>
      
       <div className="flex items-center justify-between">
         <button

@@ -18,7 +18,7 @@ export default function Navbar() {
         <div className="flex items-center">
         <Link to={`/signup`} className="mr-6 text-sm  text-gray-500 dark:text-white hover:underline">Sign up</Link>
             
-            <Link to={`/`} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</Link>
+            <Link to={`/login`} className="text-sm  text-blue-600 dark:text-blue-500 hover:underline">Login</Link>
 
         </div>
     </div>

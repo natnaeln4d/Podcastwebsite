@@ -2,27 +2,66 @@
 /* eslint-disable react/prop-types */
 import React, { useState } from 'react';
 import { FaTimes } from 'react-icons/fa';
-import v1 from './../../assets/pp.mp4';
+import axios from 'axios'
 import i1 from './../../assets/podcast-microphone-low-poly-wireframe-design-free-vector.jpeg';
 import '../../App.css';
-
-export default function VideoBox({ title, description, released, videoUrl }) {
+import Alert from '../Admin/Alert';
+export default function VideoBox({ id,title, description, released, video_url,photo_url }) {
   const [isFocused, setIsFocused] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [afterPlaying, setAfterPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] =useState(0);
   const [comment, setComment] = useState('');
+  const [successMessage, setSuccessMessage] =useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
 
   const handleCommentChange = (event) => {
     setComment(event.target.value);
   };
-
-  const handleSubmitComment = (event) => {
-    event.preventDefault();
-    console.log('Submitted Comment:', comment);
-    setComment('');
+  const sendComment = async (data) => {
+    try {
+      const token = localStorage.getItem('token');
+      const http = axios.create({
+        baseURL: 'http://localhost:8000/api',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+  
+      const res = await http.post('/commentVideo', data);
+      const comment = res.data;
+ 
+      console.log(comment.status);
+    } catch (error) {
+      console.log(error);
+    }
   };
+  const handleSubmitComment = async(event) => {
+    try {
+    event.preventDefault();
+    const formData = new FormData();
+    formData.append('video_id', id);
+    formData.append('text', comment);
+    await sendComment(formData);
+    setComment('')
+    setSuccessMessage('Commented successfully.');
+    setErrorMessage('');
+    setTimeout(() => {
+      setSuccessMessage('');
+    }, 4000);
+  } catch (error) {
+    console.log(error);
+    setSuccessMessage('');
+    setErrorMessage('Failed to Comment.');
+    setTimeout(() => {
+      setErrorMessage('');
+    }, 4000);
+  }
+   
+  };
+
 
   const handleCancel = () => {
     const confirmed = window.confirm('Are you sure you want to cancel?');
@@ -54,7 +93,7 @@ export default function VideoBox({ title, description, released, videoUrl }) {
     const seconds = Math.floor(time % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
-  
+  const baseUrl = 'http://127.0.0.1:8000';
 
   return (
     <div>
@@ -65,14 +104,15 @@ export default function VideoBox({ title, description, released, videoUrl }) {
         onMouseEnter={handleFocus}
         onMouseLeave={handleBlur}
         onClick={handleVideoClick}
+        key={id}
       >
         <div className="flex-column items-start">
-          <div className="w-[450px] bg-gray-500 p-1 justify-center items-center">
-            <img
-              src={i1}
-              alt="thumbnail"
-              className=" w-90 h-[220px] rounded-lg"
-            />
+          <div className="w-[450px] bg-gray-500  justify-center items-center">
+          <img
+          src={`${baseUrl}${photo_url}`}
+            alt="thumbnail"
+            className="w-[450px] h-[220px] rounded-lg"
+          />
           </div>
           <div className="w-1/2 ml-4">
             <div className="font-bold">{title}</div>
@@ -102,7 +142,7 @@ export default function VideoBox({ title, description, released, videoUrl }) {
                 <FaTimes className="text-end w-[2rem] h-[2rem]" />
               </button>
               <video
-                src={v1}
+                 src={`${baseUrl}${video_url}`}
                 controls
                 className="w-full h-full object-cover video-p"
                 onTimeUpdate={handleTimeUpdate}
@@ -115,6 +155,16 @@ export default function VideoBox({ title, description, released, videoUrl }) {
             <div className="text-gray-500 text-sm mt-2 mb-2">
             {formatTime(currentTime)} / {formatTime(duration)}
           </div>
+          <div className='mb-2'>
+    
+    {successMessage && (
+      
+      <Alert type="success" message={successMessage} />
+    )}
+
+   
+    {errorMessage && <Alert type="error" message={errorMessage} />}
+  </div>
           <form onSubmit={handleSubmitComment}>
     <label className="sr-only">Your message</label>
     <div className="flex items-center p-[0.1rem] rounded-lg bg-gray-50 dark:bg-gray-700">

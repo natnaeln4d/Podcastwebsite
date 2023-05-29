@@ -1,55 +1,13 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
-import React,{ useState} from 'react'
+import React,{ useState,useEffect} from 'react'
 import VideoBox from './VideoBox';
 import '../../App.css'
-    const videoData = [
-        {
-          id: 1,
-          title: 'Video Title 1',
-          description: 'Description of Video 1',
-          released: 'May 1, 2023',
-          videoUrl: 'path/to/audio1.mp3',
-        },
-        {
-          id: 2,
-          title: 'Video Title 2',
-          description: 'Description of Video 2',
-          released: 'May 5, 2023',
-          videoUrl: 'path/to/audio2.mp3',
-        },
-        {
-          id: 3,
-          title: 'Video Title 3',
-          description: 'Description of Video 2',
-          released: 'May 5, 2023',
-          videoUrl: 'path/to/audio2.mp3',
-        }, 
-        {
-          id: 4,
-          title: 'Video Title 4',
-          description: 'Description of Video 1',
-          released: 'May 1, 2023',
-          videoUrl: 'path/to/audio1.mp3',
-        },
-        {
-          id: 5,
-          title: 'Video Title 5',
-          description: 'Description of Video 2',
-          released: 'May 5, 2023',
-          videoUrl: 'path/to/audio2.mp3',
-        },
-        {
-          id: 6,
-          title: 'Video Title 6',
-          description: 'Description of Video 2',
-          released: 'May 5, 2023',
-          videoUrl: 'path/to/audio2.mp3',
-        }
-      ];
-      
+import axios from 'axios';
+
 export default function Video() {
-          const [videoList, setVideoList] = useState(videoData);
+  const [videoData, setVideoData] = useState([]);
+          const [videoList, setVideoList] = useState([]);
           const [displayRecent, setDisplayRecent] = useState(false);
         
           const handleSortAscending = () => {
@@ -73,9 +31,34 @@ export default function Video() {
             setDisplayRecent(true);
           };
         
-          const filteredVideoList = displayRecent
-            ? videoList.filter((video) => video.released === 'May 5, 2023') 
+          useEffect(() => {
+            const fetchData = async () => {
+              const token = localStorage.getItem('token');
+              const http = axios.create({
+                baseURL: 'http://localhost:8000/api',
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+        
+              const res = await http.get('/getAllvideo');
+              const videoData = res.data.data;
+              setVideoData(videoData);
+              setVideoList(videoData);
+            };
+        
+            fetchData();
+          }, []);
+        
+          let filteredVideoList = [];
+        if (videoList.length > 0) {
+          filteredVideoList = displayRecent
+            ? videoList.filter((video) => {
+                const lastCreatedAudioTimestamp = videoList[videoList.length - 1].created_at;
+                return video.created_at === lastCreatedAudioTimestamp;
+              })
             : videoList;
+        }
         
           return (
             <div className="container bg-purple-300 p-8">

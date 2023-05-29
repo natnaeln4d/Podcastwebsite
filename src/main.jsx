@@ -17,9 +17,14 @@ import Viewers from './componets/Admin/Viewers.jsx';
 import Comments from './componets/Admin/Comments.jsx';
 import Addvideo from './componets/Admin/Addvideo.jsx';
 import ContactMessage from './componets/Admin/ContactMessage.jsx';
+import ForgetPassword from './componets/Auth/ForgetPassword.jsx';
+import ResetPassword from './componets/Auth/ResetPassword.jsx';
+import PinVerify from './componets/Auth/PinVerify.jsx';
+import AllAudio from './componets/Admin/AllAudio.jsx';
+import AllVideo from './componets/Admin/AllVideo.jsx';
 const router = createBrowserRouter([
   {
-    path: "/home",
+    path: "/",
     element: <App />,
   },
   {
@@ -43,7 +48,7 @@ const router = createBrowserRouter([
     element:<Signup />
   },
   {
-    path:"/",
+    path:"/login",
     element:<Login />
   },
   {
@@ -57,8 +62,27 @@ const router = createBrowserRouter([
   {
     path:"/contactsmsg",
     element:<ContactMessage />
+  },
+  {
+    path:"/forgetpassword",
+    element:<ForgetPassword />
+  },
+  {
+    path:"/resetpassword",
+    element:<ResetPassword />
+  },
+  {
+    path:"/pinverify",
+    element:<PinVerify />
+  },
+  {
+    path:"/allAudio",
+    element:<AllAudio />
+  },
+  {
+    path:"/allVideo",
+    element:<AllVideo />
   }
-  
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(

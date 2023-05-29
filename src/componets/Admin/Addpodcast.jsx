@@ -38,11 +38,14 @@ export default function Addpodcast() {
     console.log(error);
   }
 };
-
+const userID = JSON.parse(localStorage.getItem('user'));
+console.log("user: ", userID.user.id)
 const handleSubmit = async (event) => {
   event.preventDefault();
   try {
-const userID = parseInt(localStorage.getItem('user'), 10);
+const userID = JSON.parse(localStorage.getItem('user'));
+console.log("user: ", userID)
+// (localStorage.getItem('user'), 10);
 
     const formData = new FormData();
     formData.append('user_id', 1);
@@ -176,18 +179,7 @@ const userID = parseInt(localStorage.getItem('user'), 10);
      
     
       </div>
-      <div className="mb-4 w-full">
-  <label htmlFor="video" className="block text-gray-700 font-bold mb-2">
-    Video
-  </label>
-  <input
-    className="appearance-none border rounded-md w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-    id="video"
-    type="file"
-    accept=".mp4, video/mpeg, video/ogg, video/webm"
-    onChange={(e) => setVideo(e.target.files[0])}
-  />
-</div>
+
      
       <div className="flex items-center justify-between">
         <button

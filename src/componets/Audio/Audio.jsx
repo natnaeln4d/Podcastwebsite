@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import AudioBox from './AudioBox';
 import axios from 'axios';
+import AudioBox from './AudioBox';
 
 export default function Audio() {
   const [audioData, setAudioData] = useState([]);
@@ -43,26 +43,33 @@ export default function Audio() {
       const audioData = res.data.data;
       setAudioData(audioData);
       setAudioList(audioData);
+
+      const sortedAudioList = [...audioData].sort((a, b) =>
+        b.created_at.localeCompare(a.created_at)
+      );
+      setAudioList(sortedAudioList);
+      setDisplayRecent(false);
     };
 
     fetchData();
   }, []);
 
   let filteredAudioList = [];
-if (audioList.length > 0) {
-  filteredAudioList = displayRecent
-    ? audioList.filter((audio) => {
-        const lastCreatedAudioTimestamp = audioList[audioList.length - 1].created_at;
-        return audio.created_at === lastCreatedAudioTimestamp;
-      })
-    : audioList;
-}
-
+  if (audioList.length > 0) {
+    filteredAudioList = displayRecent
+      ? audioList.filter((audio) => {
+          const lastCreatedAudioTimestamp = audioList[audioList.length - 1].created_at;
+          return audio.created_at === lastCreatedAudioTimestamp;
+        })
+      : audioList;
+  }
 
   return (
     <div className="container bg-gray-300 p-8">
       <div className="mx-auto">
-        <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800 mt-5 ">Podcast Audios</h3>
+        <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800 mt-5">
+          Podcast Audios
+        </h3>
         <div className="flex gap-[1rem] mb-4">
           <button
             className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
@@ -83,11 +90,11 @@ if (audioList.length > 0) {
             Sort Descending
           </button>
         </div>
-        <div className="container grid grid-cols-1 md:grid-cols-3 gap-[1rem] p-20 mt-[-2rem]">
-  {filteredAudioList.map((audio) => (
-    <AudioBox key={audio.id} {...audio} />
-  ))}
-</div>
+        <div className="container grid grid-cols-1 md:grid-cols-2 gap-[1rem] p-20 mt-[-2rem]">
+          {filteredAudioList.map((audio) => (
+            <AudioBox key={audio.id} {...audio} />
+          ))}
+        </div>
       </div>
     </div>
   );

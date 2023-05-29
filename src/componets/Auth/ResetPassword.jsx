@@ -5,9 +5,10 @@ import img from './../../assets/icons8-microphone-64.png'
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 import Alert from '../Admin/Alert';
-export default function Login() {
+export default function ResetPassword() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [password_confirmation,setPasswordconf]=useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -22,6 +23,11 @@ export default function Login() {
     
     setPassword(e.target.value);
  }
+ const handlePasswordChange2 = (e) => {
+    
+  setPasswordconf(e.target.value);
+}
+ 
  
  
  const sendRegister = async (data) => {
@@ -32,7 +38,6 @@ export default function Login() {
 
     const res = await http.post('/login', data);
     const user = res.data;
-
     console.log(user);
 
     if (user.status === 'success') {
@@ -41,15 +46,15 @@ export default function Login() {
       const loggedInUser = JSON.parse(localStorage.getItem('user'));
     
 
-      if (user.user.role === 'admin') {
+      if (loggedInUser.role === 'admin') {
         navigate('/allpodcast');
       } else {
-        navigate('/');
+        navigate('/home');
       }
     }
     else{
       setSuccessMessage('');
-      setErrorMessage('password is not incorrect.');
+      setErrorMessage('password is not match.');
       setTimeout(() => {
         setErrorMessage('');
       }, 4000);
@@ -63,14 +68,44 @@ export default function Login() {
 
    
 const hadleSubmit = (e) => {
+  try{
+    e.preventDefault();
+    if(password===password_confirmation){
+      const data = {
+        'email': email,
+        'password': password,
+        'password_confirmation':password_confirmation
+        }
+        sendRegister(data);
+  
+       navigate('/home')
+       setSuccessMessage('added successfully.');
+       setErrorMessage('');
+       setTimeout(() => {
+         setSuccessMessage('');
+       }, 4000);
+
+    }
+    else{
+     setSuccessMessage('');
+     setErrorMessage('password is not match.');
+     setTimeout(() => {
+       setErrorMessage('');
+     }, 4000);
+
+    }
+   } catch (error) {
+    
+     setSuccessMessage('');
+     setErrorMessage('Failed to add.');
+     setTimeout(() => {
+       setErrorMessage('');
+     }, 4000);
+   }
    
    e.preventDefault();
    
-   const data = {
-   'email': email,
-   'password': password,
-   }
-   sendRegister(data);
+
    
 }
 
@@ -94,7 +129,7 @@ const hadleSubmit = (e) => {
             <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-purple-800 dark:border-purple-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
         <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
-                Sign in to your account
+                Reset Password
         </h1>
                <form onSubmit={hadleSubmit} className="space-y-4 md:space-y-6" action="#">
                   <div>
@@ -104,6 +139,10 @@ const hadleSubmit = (e) => {
                   <div>
                       <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                       <input value={ password } onChange = {handlePasswordChange} type="password" name="password" id="password" placeholder="••••••••" className="bg-purple-50 border border-purple-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-purple-700 dark:border-purple-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
+                  </div>
+                  <div>
+                      <label for="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                      <input value={ password_confirmation } onChange = {handlePasswordChange2} type="password" name="password" id="password" placeholder="••••••••" className="bg-purple-50 border border-purple-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-purple-700 dark:border-purple-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required=""/>
                   </div>
                   <div className="flex items-center justify-between">
                       <div className="flex items-start">
