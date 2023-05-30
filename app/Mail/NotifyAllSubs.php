@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
 class NotifyAllSubs extends Mailable
 {
@@ -18,9 +19,12 @@ class NotifyAllSubs extends Mailable
      *
      * @return void
      */
-    public function __construct()
+    protected $data;
+
+
+    public function __construct($data)
     {
-        //
+        $this->data = $data;
     }
 
     /**
@@ -31,7 +35,9 @@ class NotifyAllSubs extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Notify All Subs',
+            from: new Address('natnaeln4d@gmail','Natnael'),
+            subject: 'We Deliver To You Fresh
+            Podcast Everyday',
         );
     }
 
@@ -43,7 +49,10 @@ class NotifyAllSubs extends Mailable
     public function content()
     {
         return new Content(
-            view: 'view.name',
+            view: 'emails.notify_by_email',
+            with: [
+                'data' => $this->data
+            ]
         );
     }
 

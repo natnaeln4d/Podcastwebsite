@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Mail\NotifyAllSubs;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use \App\Models\Podcast;
+use \App\Models\User;
 use App\Models\PodcastVideo;
 use Illuminate\Support\Facades\Storage;
 use App\File;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 
 class PodcastController extends Controller
@@ -61,10 +64,21 @@ class PodcastController extends Controller
         }
         $podcast->save();
 
+        $data = [
+            "title" => $request->title,
+            "description"=>$request->description,
+            "url"=>"http://localhost:5173"
+        ];
+        $emails = User::where('status', true)->pluck('email')->toArray();
+        Mail::to($emails)->send(new NotifyAllSubs($data));
+
+        $podcast->save();
+
         return response()->json([
             'status' => 'success',
             'msg' => 'Podcast added successfully',
-            'data'=>$podcast
+            'data' => $podcast,
+            'email'=>$emails
         ], 200);
     } catch (\Exception $e) {
         return response()->json([
@@ -177,6 +191,33 @@ public function deletePodcast($id)
         }
 
         $podcast->delete();
+        $newData = Podcast::all();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $newData,
+            'msg' => 'Podcast deleted successfully'
+        ], 200);
+    } catch (\Exception $e) {
+        return response()->json([
+            'status' => 'fail',
+            'msg' => $e->getMessage()
+        ], 500);
+    }
+}
+public function deleteVideo($id)
+{
+    try {
+        $podcast = Video::find($id);
+
+        if (!$podcast) {
+            return response()->json([
+                'status' => 'fail',
+                'msg' => 'Podcast not found'
+            ], 404);
+        }
+
+        $podcast->delete();
 
         return response()->json([
             'status' => 'success',
@@ -189,7 +230,6 @@ public function deletePodcast($id)
         ], 500);
     }
 }
-
 public function postVideo(Request $request)
 {
     try {
@@ -252,13 +292,21 @@ public function postVideo(Request $request)
             $podcast->width=$width;
 
         }
+        $data = [
+            "title" => $request->title,
+            "description"=>$request->description,
+            "url"=>"http://localhost:5173"
+        ];
+        $emails = User::where('status', true)->pluck('email')->toArray();
+        Mail::to($emails)->send(new NotifyAllSubs($data));
 
         $podcast->save();
 
         return response()->json([
             'status' => 'success',
             'msg' => 'Podcast added successfully',
-            'data' => $podcast
+            'data' => $podcast,
+            'email'=>$emails
         ], 200);
     } catch (\Exception $e) {
         return response()->json([
