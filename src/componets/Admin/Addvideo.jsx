@@ -47,10 +47,12 @@ export default function Addvideo() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-  const userID = parseInt(localStorage.getItem('user'), 10);
-  
-      const formData = new FormData();
-      formData.append('user_id', 1);
+      const userID = JSON.parse(localStorage.getItem('user'));
+      console.log("user: ", userID)
+      
+      
+          const formData = new FormData();
+          formData.append('user_id', userID.user.id);
       formData.append('title', title);
       formData.append('description', description);
       formData.append('audio', audio);

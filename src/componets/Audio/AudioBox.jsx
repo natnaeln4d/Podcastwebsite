@@ -1,19 +1,27 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 // import { useHistory } from 'react-router-dom';
 import Alert from '../Admin/Alert';
 
-export default function AudioBox({ id, title, description, released, audio_url }) {
+export default function AudioBox({ id, title, description, released, audio_url,status }) {
   const [isFocused, setIsFocused] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [comment, setComment] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [subscribed, setSubscribed] = useState(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userID=user.user.id
+    const storedStatus = localStorage.getItem(`subscribed_${userID}`);
+    return storedStatus ? JSON.parse(storedStatus) : false;
+  });
+  useEffect(() => {
+    localStorage.setItem(`subscribed_${id}`, JSON.stringify(subscribed));
+  }, [id, subscribed]);
   // const history = useHistory();
   const navigate = useNavigate();
   const handleCommentChange = (event) => {
@@ -43,6 +51,7 @@ export default function AudioBox({ id, title, description, released, audio_url }
     try {
       event.preventDefault();
       const formData = new FormData();
+      
   
       if (subscribed) {
         const userID = JSON.parse(localStorage.getItem('user'));
@@ -92,8 +101,11 @@ export default function AudioBox({ id, title, description, released, audio_url }
     const token = localStorage.getItem('token');
     
     if (token) {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userID=user.user.id
      
       setSubscribed(true);
+      localStorage.setItem(`subscribed_${userID}`, JSON.stringify(true));
       try{
         const token = localStorage.getItem('token');
         const http = axios.create({
@@ -123,30 +135,37 @@ export default function AudioBox({ id, title, description, released, audio_url }
   };
   
   const handleUnsubscribe = async() => {
-    setSubscribed(false);
 
- try{
-        const token = localStorage.getItem('token');
-        const http = axios.create({
+    const confirmed = window.confirm('Are you sure you want to Subscribe?');
+    if(confirmed){
+      const user = JSON.parse(localStorage.getItem('user'));
+      const userID=user.user.id
+      setSubscribed(false);
+      localStorage.setItem(`subscribed_${userID}`, JSON.stringify(false));
+      try{
+             const token = localStorage.getItem('token');
+             const http = axios.create({
+               
+               baseURL: 'http://localhost:8000/api',
+               headers: {
+                 Authorization: `Bearer ${token}`,
+               },
+             });
+             const userID = JSON.parse(localStorage.getItem('user'));
+            
           
-          baseURL: 'http://localhost:8000/api',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const userID = JSON.parse(localStorage.getItem('user'));
-       
-     
-       const uId=userID.user.id
-       const data = {
-   
-        status: 0, 
-      };
-        const res = await http.patch(`/subscribe/${uId}`, data);
-    
-        console.log(res)
-       }  catch (error) {
-        console.log(error);}
+            const uId=userID.user.id
+            const data = {
+        
+             status: 0, 
+           };
+             const res = await http.patch(`/subscribe/${uId}`, data);
+         
+             console.log(res)
+            }  catch (error) {
+             console.log(error);}
+    }
+  
 
   };
 
@@ -220,10 +239,10 @@ export default function AudioBox({ id, title, description, released, audio_url }
 
       {subscribed && (
         <button
-          className="bg-red-500 text-white rounded-lg px-4 py-2 mt-2"
+          className="bg-purple-900 text-white rounded-lg px-4 py-2 mt-2"
           onClick={handleUnsubscribe}
         >
-          Unsubscribe
+          subscribed
         </button>
       )}
             </form>

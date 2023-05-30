@@ -12,12 +12,15 @@ import axios from 'axios';
 import image1 from './../../assets/icons8-microphone-64.png'
 
 export default function AllVideo() {
-    const [audios, setAudio] = useState([]);
+    const [videos, setVideo] = useState([]);
     const [successMessage, setSuccessMessage] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
   
     const handleDelete=async(id)=>{
       try {
+        const confirmed = window.confirm('Are you sure you want to Delete?');
+
+        if (confirmed) {
         const token = localStorage.getItem('token');
         const http = axios.create({
           baseURL: 'http://localhost:8000/api',
@@ -26,7 +29,7 @@ export default function AllVideo() {
           }
         });
   
-        const res = await http.delete(`/deletePodcast/${id}`);
+        const res = await http.delete(`/deleteVideo/${id}`);
      
        console.log(res)
         setSuccessMessage('Deleted successfully.');
@@ -34,6 +37,7 @@ export default function AllVideo() {
         setTimeout(() => {
           setSuccessMessage('');
         }, 4000);
+      }
       } catch (error) {
         console.log(error);
         setSuccessMessage('');
@@ -57,9 +61,9 @@ export default function AllVideo() {
         });
   
         const res = await http.get('/getAllvideo');
-        const audioData = res.data.data;
-        console.log(audioData); 
-        setAudio(audioData);
+        const videoData = res.data.data;
+        console.log(videoData); 
+        setVideo(videoData);
       } catch (error) {
         console.log(error);
       }
@@ -122,7 +126,7 @@ export default function AllVideo() {
                 <th class="px-1 py-2 font-bold text-left">ID</th>
                   <th class="px-4 py-2 font-bold text-left">Title</th>
                   <th class="px-4 py-2 font-bold text-left">Description</th>
-                  <th class="px-4 py-2 font-bold text-left">Audio URl</th>
+                  <th class="px-4 py-2 font-bold text-left">Video URl</th>
                   <th class="px-4 py-2 font-bold text-left">Status</th>
                   <th class="px-4 py-2 font-bold text-left"></th>
                 </tr>
@@ -130,17 +134,17 @@ export default function AllVideo() {
               <tbody>
             
               
-              {audios.length > 0 ? (
-    audios.map((audio) => (
-      <tr key={audio.id} className="border-b h-[4rem] hover:bg-purple-300  text-gray-800 cursor-pointer p-2">
-        <td class="border px-1 py-2">{audio.id}</td>
-        <td class="border px-4 py-2">{audio.title}</td>
-        <td class="border px-4 py-2">{audio.description}</td>
-        <td class="border px-4 py-2">{audio.video_url}</td>
+              {videos.length > 0 ? (
+    videos.map((video) => (
+      <tr key={video.id} className="border-b h-[4rem] hover:bg-purple-300  text-gray-800 cursor-pointer p-2">
+        <td class="border px-1 py-2">{video.id}</td>
+        <td class="border px-4 py-2">{video.title}</td>
+        <td class="border px-4 py-2">{video.description}</td>
+        <td class="border px-4 py-2">{video.video_url}</td>
         <td class="border px-4 py-2 text-green-500 font-bold">Active</td>
         <td className='px-4 py-2 border '>
         
-          <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={() => handleDelete(audio.id)}>Delete</a>
+          <a href="#" class="font-medium text-red-600 dark:text-red-500 hover:underline" onClick={() => handleDelete(video.id)}>Delete</a>
         </td>
       </tr>
     ))

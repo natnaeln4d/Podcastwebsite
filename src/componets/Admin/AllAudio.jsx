@@ -18,22 +18,29 @@ export default function AllAudio() {
   
     const handleDelete=async(id)=>{
       try {
-        const token = localStorage.getItem('token');
-        const http = axios.create({
-          baseURL: 'http://localhost:8000/api',
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-  
-        const res = await http.delete(`/deletePodcast/${id}`);
-     
-       console.log(res)
-        setSuccessMessage('Deleted successfully.');
-        setErrorMessage('');
-        setTimeout(() => {
-          setSuccessMessage('');
-        }, 4000);
+        const confirmed = window.confirm('Are you sure you want to Delete?');
+
+        if (confirmed) {
+          const token = localStorage.getItem('token');
+          const http = axios.create({
+            baseURL: 'http://localhost:8000/api',
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+    
+          const res = await http.delete(`/deletePodcast/${id}`);
+       
+         console.log("New data delete: ", res, res.data.data);
+         setAudio(res.data.data);
+         
+          setSuccessMessage('Deleted successfully.');
+          setErrorMessage('');
+          setTimeout(() => {
+            setSuccessMessage('');
+          }, 4000);
+        }
+       
       } catch (error) {
         console.log(error);
         setSuccessMessage('');

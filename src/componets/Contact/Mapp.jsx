@@ -2,7 +2,7 @@
 import React from 'react';
 import { GoogleMap, LoadScript, Marker } from 'react-google-maps';
 
-const Map = () => {
+const Mapp = () => {
   const mapStyles = {
     height: '400px',
     width: '100%'
@@ -22,4 +22,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default Mapp;

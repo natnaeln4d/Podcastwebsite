@@ -20,6 +20,9 @@ export default function AllPodcast() {
 
   const handleDelete=async(id)=>{
     try {
+      const confirmed = window.confirm('Are you sure you want to cancel?');
+
+      if (confirmed) {
       const token = localStorage.getItem('token');
       const http = axios.create({
         baseURL: 'http://localhost:8000/api',
@@ -35,7 +38,7 @@ export default function AllPodcast() {
       setErrorMessage('');
       setTimeout(() => {
         setSuccessMessage('');
-      }, 4000);
+      }, 4000);}
     } catch (error) {
       console.log(error);
       setSuccessMessage('');

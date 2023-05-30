@@ -79,7 +79,7 @@ export default function Signup() {
         }
         sendRegister(data);
    
-        navigate('/home')
+        navigate('/')
         setSuccessMessage('added successfully.');
         setErrorMessage('');
         setTimeout(() => {

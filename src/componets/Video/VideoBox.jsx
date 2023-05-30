@@ -1,12 +1,13 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios'
+import { Link,useNavigate } from 'react-router-dom';
 import i1 from './../../assets/podcast-microphone-low-poly-wireframe-design-free-vector.jpeg';
 import '../../App.css';
 import Alert from '../Admin/Alert';
-export default function VideoBox({ id,title, description, released, video_url,photo_url }) {
+export default function VideoBox({ id, title, description, released, video_url, photo_url, subscribed, handleSubscribe, handleUnsubscribe }) {
   const [isFocused, setIsFocused] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [afterPlaying, setAfterPlaying] = useState(false);
@@ -15,6 +16,7 @@ export default function VideoBox({ id,title, description, released, video_url,ph
   const [comment, setComment] = useState('');
   const [successMessage, setSuccessMessage] =useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
 
 
   const handleCommentChange = (event) => {
@@ -93,6 +95,7 @@ export default function VideoBox({ id,title, description, released, video_url,ph
     const seconds = Math.floor(time % 60).toString().padStart(2, '0');
     return `${minutes}:${seconds}`;
   };
+
   const baseUrl = 'http://127.0.0.1:8000';
 
   return (
@@ -141,6 +144,7 @@ export default function VideoBox({ id,title, description, released, video_url,ph
               >
                 <FaTimes className="text-end w-[2rem] h-[2rem]" />
               </button>
+              
               <video
                  src={`${baseUrl}${video_url}`}
                 controls
@@ -174,6 +178,24 @@ export default function VideoBox({ id,title, description, released, video_url,ph
             <span className="sr-only">Send message</span>
         </button>
     </div>
+    {!subscribed && (
+        <button
+          className="bg-blue-500 text-white rounded-lg px-4 py-2 mt-2"
+          onClick={handleSubscribe}
+        >
+          Subscribe
+        </button>
+      )}
+
+      {subscribed && (
+        <button
+          className="bg-purple-900 text-white rounded-lg px-4 py-2 mt-2"
+          onClick={handleUnsubscribe}
+        >
+          subscribed
+        </button>
+      )}
+          
 </form>
           </div>
         </div>

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Screen from './../../assets/Screen Shot 2023-05-26 at 9.03.45 PM.png'
 import axios from 'axios'
 import Alert from '../Admin/Alert';
+import Mapp from './Mapp';
 export default function ContactUs(){
   const [fullName,setFullname] = useState('');
   const [email, setEmail] = useState('');
@@ -233,6 +234,7 @@ export default function ContactUs(){
           </div>
           <div className='bg-purple-500 w-[100rem] h-[10rem]'>
           <img src={Screen} className='w-full object-cover' />
+          {/* <Mapp /> */}
           </div>
         </div>
       </div>
