@@ -32,16 +32,19 @@ Route::post('/pinverify',[AuthController::class, 'pinVerify']);
 Route::patch('/subscribe/{id}',[ViewerController::class,'updateUserStatus']);
 Route::get('/getAll',[PodcastController::class,'getAllPodcasts']);
 Route::get('/getAllvideo',[PodcastController::class,'getAllVideo']);
+Route::get('/getComments/{id}', [ViewerController::class, 'getComments']);
+Route::get('/videoComments/{id}', [ViewerController::class, 'videoComments']);
+Route::delete('/deleteCommentbyUser/{id}', [ViewerController::class, 'deleteCommentbyUser']);
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/getViewer', [AuthController::class,'getAllViewer']);
     Route::post('/addpodcast',[PodcastController::class,'addpodcast']);
     Route::post('/addvideopodcast',[PodcastController::class,'postVideo']);
-
     Route::patch('/update/{id}', [PodcastController::class, 'updatePodcast']);
     Route::get('/getPodcastById/{id}', [PodcastController::class, 'getPodcastById']);
     Route::delete('/deletePodcast/{id}', [PodcastController::class, 'deletePodcast']);
     Route::delete('/deleteVideo/{id}', [PodcastController::class, 'deleteVideo']);
     Route::delete('/deleteUser/{id}', [ViewerController::class, 'deleteViewer']);
+    Route::delete('/deleteComment/{id}', [ViewerController::class, 'deleteComment']);
     Route::get('/allcomments',[ViewerController::class,'getAllComments']);
     Route::get('/getContactus',[ViewerController::class,'getContactus']);
 });

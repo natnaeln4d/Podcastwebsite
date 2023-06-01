@@ -29,11 +29,12 @@ class ViewerController extends Controller
         $podcast = Podcast::findOrFail($validatedData['podcast_id']);
         $comment->podcast()->associate($podcast);
 
-
+        $newData=Comment::where(['podcast_id'=>$request->user_id])->with('podcast','video','user')->get();
         $comment->save();
 
         return response()->json([
             'status' => 'success',
+            'data'=>$newData,
             'msg' => 'Comment posted successfully',
         ], 200);
     }
@@ -65,6 +66,24 @@ class ViewerController extends Controller
     public function getAllComments()
     {
         $comments = Comment::with('podcast','video','user')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $comments,
+        ], 200);
+    }
+     public function getComments($id)
+    {
+        $comments = Comment::where(['podcast_id'=>$id])->with('podcast','video','user')->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $comments,
+        ], 200);
+    }
+         public function videoComments($id)
+    {
+        $comments = Comment::where(['video_id'=>$id])->with('podcast','video','user')->get();
 
         return response()->json([
             'status' => 'success',
@@ -143,6 +162,64 @@ class ViewerController extends Controller
             ], 500);
         }
     }
+    public function deleteComment($id)
+    {
+        try {
+            $Comment = Comment::find($id);
+
+            if (!$Comment) {
+                return response()->json([
+                    'status' => 'fail',
+                    'msg' => 'Comment not found'
+                ], 404);
+            }
+
+            $Comment->delete();
+            $newData=Comment::all();
+        return response()->json([
+            'status' => 'success',
+            'data' => $newData,
+            'msg' => 'Comment deleted successfully'
+        ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'fail',
+                'msg' => $e->getMessage()
+            ], 500);
+        }
+    }
+    public function deleteCommentbyUser($id)
+    {
+        try {
+            $comment = Comment::find($id);
+    
+            if (!$comment) {
+                return response()->json([
+                    'status' => 'fail',
+                    'msg' => 'Comment not found'
+                ], 404);
+            }
+    
+            $comment->delete();
+    
+        
+            $newData = Comment::where(['podcast_id' => $comment->podcast_id])
+                ->with('podcast', 'video', 'user')
+                ->get();
+    
+            return response()->json([
+                'status' => 'success',
+                'data' => $newData,
+                'msg' => 'Comment deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'fail',
+                'msg' => $e->getMessage()
+            ], 500);
+        }
+    }
+    
     public function updateUserStatus(Request $request, $id)
     {
         try {
