@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-undef */
 /* eslint-disable no-unused-vars */
 import App from './App.jsx'
 import './index.css'
@@ -10,7 +11,7 @@ import {
 import AllPodcast from './componets/Admin/AllPodcast.jsx';
 import Addpodcast from './componets/Admin/Addpodcast.jsx';
 import Updatepodcast from './componets/Admin/Updatepodcast.jsx';
-
+import { Provider } from 'react-redux';
 import Signup from './componets/Auth/Signup.jsx';
 import Login from './componets/Auth/Login.jsx'
 import Viewers from './componets/Admin/Viewers.jsx';
@@ -22,6 +23,7 @@ import ResetPassword from './componets/Auth/ResetPassword.jsx';
 import PinVerify from './componets/Auth/PinVerify.jsx';
 import AllAudio from './componets/Admin/AllAudio.jsx';
 import AllVideo from './componets/Admin/AllVideo.jsx';
+import store from './app/store';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -87,6 +89,10 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+       <Provider store={store}>
+      <RouterProvider router={router}>
+        <App />
+      </RouterProvider>
+    </Provider>
   </React.StrictMode>
 )

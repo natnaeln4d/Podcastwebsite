@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Screen from './../../assets/Screen Shot 2023-05-26 at 9.03.45 PM.png'
 import axios from 'axios'
 import Alert from '../Admin/Alert';
-import Mapp from './Mapp';
+import Location from './Location';
 export default function ContactUs(){
   const [fullName,setFullname] = useState('');
   const [email, setEmail] = useState('');
@@ -63,7 +63,7 @@ export default function ContactUs(){
              <div className='flex'>
         
             
-<div class="container my-24 px-6 mx-auto">
+<div class="container m-5 my-15 px-6 mx-auto">
 
 
   <section class="mb-32 text-gray-800">
@@ -232,9 +232,9 @@ export default function ContactUs(){
               </div>
             </div>
           </div>
-          <div className='bg-purple-500 w-[100rem] h-[10rem]'>
-          <img src={Screen} className='w-full object-cover' />
-          {/* <Mapp /> */}
+          <div className='bg-purple-500 w-[100rem] h-[15rem]'>
+          {/* <img src={Screen} className='w-full object-cover' /> */}
+          <Location zoomLevel={17} />
           </div>
         </div>
       </div>

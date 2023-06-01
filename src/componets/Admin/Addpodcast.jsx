@@ -38,17 +38,16 @@ export default function Addpodcast() {
     console.log(error);
   }
 };
-const userID = JSON.parse(localStorage.getItem('user'));
-console.log("user: ", userID.user.id)
+
 const handleSubmit = async (event) => {
   event.preventDefault();
   try {
 const userID = JSON.parse(localStorage.getItem('user'));
 console.log("user: ", userID)
-// (localStorage.getItem('user'), 10);
+
 
     const formData = new FormData();
-    formData.append('user_id', 1);
+    formData.append('user_id', userID.user.id);
     formData.append('title', title);
     formData.append('description', description);
     formData.append('audio', audio);

@@ -1,25 +1,17 @@
-/* eslint-disable no-unused-vars */
-import React from 'react';
-import { GoogleMap, LoadScript, Marker } from 'react-google-maps';
+// /* eslint-disable no-unused-vars */
+// import React from 'react';
 
-const Mapp = () => {
-  const mapStyles = {
-    height: '400px',
-    width: '100%'
-  };
 
-  const defaultCenter = {
-    lat: 37.7749, 
-    lng: -122.4194 
-  };
+// export default function Mapp () {
+// ;
 
-  return (
-    <LoadScript googleMapsApiKey="AIzaSyBqGZKcHosW7hMtKasAW4mN2cD9H7eT6Yw">
-      <GoogleMap mapContainerStyle={mapStyles} center={defaultCenter} zoom={10}>
-        <Marker position={defaultCenter} />
-      </GoogleMap>
-    </LoadScript>
-  );
-};
+//   return (
+//     <LoadScript googleMapsApiKey="AIzaSyBqGZKcHosW7hMtKasAW4mN2cD9H7eT6Yw">
+//       <GoogleMap mapContainerStyle={mapStyles} center={defaultCenter} zoom={10}>
+//         <Marker position={defaultCenter} />
+//       </GoogleMap>
+//     </LoadScript>
+//   );
+// }
 
-export default Mapp;
+

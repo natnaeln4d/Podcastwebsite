@@ -7,17 +7,16 @@ import axios from 'axios';
 import { Link,useNavigate } from 'react-router-dom';
 
 export default function Video() {
-  const navigate = useNavigate();
+   const navigate = useNavigate();
   const [videoData, setVideoData] = useState([]);
           const [videoList, setVideoList] = useState([]);
           const [displayRecent, setDisplayRecent] = useState(false);
           const [subscribed, setSubscribed] = useState(() => {
             const user = JSON.parse(localStorage.getItem('user'));
-            const userID = user.user.id;
-            const storedStatus = localStorage.getItem(`subscribed_${userID}`);
+            const userID = user && user.user ? user.user.id : null;
+            const storedStatus = userID ? localStorage.getItem(`subscribed_${userID}`) : null;
             return storedStatus ? JSON.parse(storedStatus) : false;
           });
-        
           const handleSortAscending = () => {
             const sortedAudioList = [...videoList].sort((a, b) =>
               a.description.localeCompare(b.description)
@@ -67,77 +66,73 @@ export default function Video() {
               })
             : videoList;
         }
-        const handleSubscribe =async () => {
+        const handleSubscribe = async () => {
           const token = localStorage.getItem('token');
-          
+        
           if (token) {
             const user = JSON.parse(localStorage.getItem('user'));
-            const userID=user.user.id
-           
-            setSubscribed(true);
-            localStorage.setItem(`subscribed_${userID}`, JSON.stringify(true));
-            try{
-              const token = localStorage.getItem('token');
-              const http = axios.create({
-                
-                baseURL: 'http://localhost:8000/api',
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-              const userID = JSON.parse(localStorage.getItem('user'));
-             
-           
-             const uId=userID.user.id
-             const data = {
-         
-              status: 1, 
-            };
-              const res = await http.patch(`/subscribe/${uId}`, data);
-          
-              console.log(res)
-             }  catch (error) {
-              console.log(error);}
+        
+            if (user && user.user && user.user.id) { 
+              const userID = user.user.id;
+              setSubscribed(true);
+              localStorage.setItem(`subscribed_${userID}`, JSON.stringify(true));
+              try {
+                const token = localStorage.getItem('token');
+                const http = axios.create({
+                  baseURL: 'http://localhost:8000/api',
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+                const data = {
+                  status: 1,
+                };
+                const res = await http.patch(`/subscribe/${userID}`, data);
+        
+                console.log(res);
+              } catch (error) {
+                console.log(error);
+              }
+            } else {
+              console.log('User object not found');
+            }
           } else {
-           
             navigate('/login');
           }
         };
         
-        const handleUnsubscribe = async() => {
-      
+        const handleUnsubscribe = async () => {
           const confirmed = window.confirm('Are you sure you want to Subscribe?');
-          if(confirmed){
+          if (confirmed) {
             const user = JSON.parse(localStorage.getItem('user'));
-            const userID=user.user.id
-            setSubscribed(false);
-            localStorage.setItem(`subscribed_${userID}`, JSON.stringify(false));
-            try{
-                   const token = localStorage.getItem('token');
-                   const http = axios.create({
-                     
-                     baseURL: 'http://localhost:8000/api',
-                     headers: {
-                       Authorization: `Bearer ${token}`,
-                     },
-                   });
-                   const userID = JSON.parse(localStorage.getItem('user'));
-                  
-                
-                  const uId=userID.user.id
-                  const data = {
-              
-                   status: 0, 
-                 };
-                   const res = await http.patch(`/subscribe/${uId}`, data);
-               
-                   console.log(res)
-                  }  catch (error) {
-                   console.log(error);}
-          }
         
-      
+            if (user && user.user && user.user.id) { // Check if user and user.user exist
+              const userID = user.user.id;
+              setSubscribed(false);
+              localStorage.setItem(`subscribed_${userID}`, JSON.stringify(false));
+              try {
+                const token = localStorage.getItem('token');
+                const http = axios.create({
+                  baseURL: 'http://localhost:8000/api',
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                });
+                const data = {
+                  status: 0,
+                };
+                const res = await http.patch(`/subscribe/${userID}`, data);
+        
+                console.log(res);
+              } catch (error) {
+                console.log(error);
+              }
+            } else {
+              console.log('User object not found');
+            }
+          }
         };
+        
         
           return (
             <div className="container bg-purple-300 p-8">

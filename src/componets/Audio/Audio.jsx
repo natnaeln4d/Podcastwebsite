@@ -3,18 +3,16 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AudioBox from './AudioBox';
 import { Link,useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { setSubscribed } from '../../app/reducers';
 export default function Audio() {
   const [audioData, setAudioData] = useState([]);
   const [audioList, setAudioList] = useState([]);
   const [displayRecent, setDisplayRecent] = useState(false);
   const navigate = useNavigate();
 
-          const [subscribed, setSubscribed] = useState(() => {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const userID = user.user.id;
-            const storedStatus = localStorage.getItem(`subscribed_${userID}`);
-            return storedStatus ? JSON.parse(storedStatus) : false;
-          });
+  const subscribed = useSelector((state) => state.subscribed);
+  const dispatch = useDispatch();
   const handleSortAscending = () => {
     const sortedAudioList = [...audioList].sort((a, b) =>
       a.description.localeCompare(b.description)
@@ -77,7 +75,7 @@ export default function Audio() {
       const user = JSON.parse(localStorage.getItem('user'));
       const userID=user.user.id
      
-      setSubscribed(true);
+      dispatch(setSubscribed(true));
       localStorage.setItem(`subscribed_${userID}`, JSON.stringify(true));
       try{
         const token = localStorage.getItem('token');
@@ -113,7 +111,7 @@ export default function Audio() {
     if(confirmed){
       const user = JSON.parse(localStorage.getItem('user'));
       const userID=user.user.id
-      setSubscribed(false);
+      dispatch(setSubscribed(false));
       localStorage.setItem(`subscribed_${userID}`, JSON.stringify(false));
       try{
              const token = localStorage.getItem('token');
@@ -143,7 +141,7 @@ export default function Audio() {
   };
 
   return (
-    <div className="container bg-gray-300 p-8">
+    <div className="container p-8">
       <div className="mx-auto">
         <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800 mt-5">
           Podcast Audios
