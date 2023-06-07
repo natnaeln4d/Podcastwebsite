@@ -81,7 +81,7 @@ class ViewerController extends Controller
             'data' => $comments,
         ], 200);
     }
-         public function videoComments($id)
+    public function videoComments($id)
     {
         $comments = Comment::where(['video_id'=>$id])->with('podcast','video','user')->get();
 
@@ -192,21 +192,21 @@ class ViewerController extends Controller
     {
         try {
             $comment = Comment::find($id);
-    
+
             if (!$comment) {
                 return response()->json([
                     'status' => 'fail',
                     'msg' => 'Comment not found'
                 ], 404);
             }
-    
+
             $comment->delete();
-    
-        
+
+
             $newData = Comment::where(['podcast_id' => $comment->podcast_id])
                 ->with('podcast', 'video', 'user')
                 ->get();
-    
+
             return response()->json([
                 'status' => 'success',
                 'data' => $newData,
@@ -219,7 +219,7 @@ class ViewerController extends Controller
             ], 500);
         }
     }
-    
+
     public function updateUserStatus(Request $request, $id)
     {
         try {

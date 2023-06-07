@@ -33,7 +33,7 @@ class PodcastController extends Controller
                 if ($user->role !== 'admin') {
                     $fail('The '.$attribute.' must be set by an admin user.');
                 }
-            }],
+             }],
             'audio' => 'nullable|file|mimes:audio/mpeg,mpga,mp3,wav,aac',
             'video' => 'nullable|file'
         ]);
@@ -70,6 +70,12 @@ class PodcastController extends Controller
             "url"=>"http://localhost:5173"
         ];
         $emails = User::where('status', true)->pluck('email')->toArray();
+        if (empty($emails)) {
+            return response()->json([
+                'status' => 'fail',
+                'msg' => 'No email recipients found'
+            ], 400);
+        }
         Mail::to($emails)->send(new NotifyAllSubs($data));
 
         $podcast->save();
@@ -218,9 +224,10 @@ public function deleteVideo($id)
         }
 
         $podcast->delete();
-
+        $newData=Video::all();
         return response()->json([
             'status' => 'success',
+            'data' => $newData,
             'msg' => 'Podcast deleted successfully'
         ], 200);
     } catch (\Exception $e) {
