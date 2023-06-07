@@ -24,6 +24,12 @@ export default function AdminNav() {
    
     localStorage.removeItem('token'); 
     setIsLoggedIn(false); 
+    let i;
+
+    const userID = JSON.parse(localStorage.getItem('user'));
+            
+          
+    const uId=userID.user.id
   };
   return (
     <div>

@@ -106,8 +106,9 @@ export default function AudioBox({ id, title, description, released, audio_url, 
 
       const res = await http.post('/comments', data);
       const commentData = res.data.data;
-     setComment(commentData);
-      console.log(commentData.status);
+
+       setComment(commentData);
+      console.log(commentData);
     } catch (error) {
       console.log(error);
     }

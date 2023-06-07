@@ -15,10 +15,14 @@ export default function VideoBox({ id, title, description, released, video_url, 
   const [afterPlaying, setAfterPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] =useState(0);
+  const [videoDuration, setVideoDuration] = useState(0);
   const [comment, setComment] = useState('');
   const [successMessage, setSuccessMessage] =useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [comments, setComments] = useState([]);
+  const handleLoadedMetadata = (event) => {
+    setVideoDuration(event.target.duration);
+  };
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('token');
@@ -158,7 +162,7 @@ export default function VideoBox({ id, title, description, released, video_url, 
   return (
     <div>
       <div
-        className={`relative p-4 bg-white w-[30rem] h-auto rounded-lg ${
+        className={`relative p-4 bg-white w-[24rem] h-auto rounded-lg ${
           isFocused ? 'transform scale-110' : ''
         }`}
         onMouseEnter={handleFocus}
@@ -174,7 +178,7 @@ export default function VideoBox({ id, title, description, released, video_url, 
             className="w-[490px] h-[230px] rounded-lg"
           />
           <div className='absolute text-white shadow-md top-5 left-8'>Deep Podcast Video</div>
-          <div className='absolute text-blue-500 shadow-md bottom-[4rem] right-6'>{formatTime(duration)}</div>
+          <div className='absolute text-blue-500 shadow-md bottom-[4rem] right-6'>{formatTime(videoDuration)}</div>
           </div>
           <div className="mt-3 ml-2">
             <div className="font-bold">{title}</div>  

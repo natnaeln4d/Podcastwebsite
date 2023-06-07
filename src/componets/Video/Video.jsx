@@ -135,11 +135,11 @@ export default function Video() {
         
         
           return (
-            <div className="container bg-purple-300 p-8">
+            <div className="container bg-purple-300 p-5">
               <div className=" mx-auto">
           
       <h3 className="mb-4 self-center text-3xl font-semibold item-center justify-center text-center whitespace-nowrap dark:text-purple-800">Podcast Videos</h3>
-      <div className="flex gap-[1rem] mb-4">
+      <div className="flex gap-[0.5rem] mb-4">
             <button
               className="bg-purple-500 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded"
               onClick={handleDisplayRecent}
@@ -164,7 +164,7 @@ export default function Video() {
         
             
           </div>
-                <div className="containe grid grid-cols-2 gap-[1rem] p-20 mt-[-2rem]">
+                <div className="container grid grid-cols-3 gap-[1rem] p-4 mt-[2rem]">
                   {filteredVideoList.map((video) => (
                     <VideoBox
           key={video.id}
